@@ -188,3 +188,31 @@ db.fiyatlar.find( {} , {urunAdi:1,_id:0} ).sort({fiyat:-1});
 // 1 : A-Z, -1: Z-A ( ASCII formatina gore siralama yapar)
 use("URUNLER");
 db.fiyatlar.find({fiyat:5000}).sort({urunAdi:1});
+
+
+
+
+// db.createCollection("articles");
+// collection da test arama yapmak icin, yani istedigimiz bir String ifadeyi dondurmek icin
+use("URUNLER")
+db.articles.createIndex( { subject: "text" } )
+db.articles.insertMany(
+   [
+     { _id: 1, subject: "coffee", author: "xyz", views: 50 },
+     { _id: 2, subject: "Coffee Shopping", author: "efg", views: 5 },
+     { _id: 3, subject: "Baking a cake", author: "abc", views: 90  },
+     { _id: 4, subject: "baking", author: "xyz", views: 100 },
+     { _id: 5, subject: "Café Con Leche", author: "abc", views: 200 },
+     { _id: 6, subject: "Сырники", author: "jkl", views: 80 },
+     { _id: 7, subject: "coffee and cream", author: "efg", views: 10 },
+     { _id: 8, subject: "Cafe con Leche", author: "xyz", views: 10 }
+   ]
+)
+
+// db.articles.createIndex( { subject: "text" } ) //sonradan da ekleyebiliriz, index olusturup ona gore ariyor
+
+use("URUNLER")
+db.articles.find( {$text: {$search:"coffee"} } )
+
+use("URUNLER")
+db.articles.find( { subject:/coff/ } ) //case-sensitive

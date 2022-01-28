@@ -1,0 +1,107 @@
+
+
+
+//ödev
+//coord değeri -95.754168'den küçük olan restoranları bulmak için bir MongoDB sorgusu yazın
+db.foods.find({"address.coord" : {$lt : -95.754168}});
+
+
+
+    
+    
+    //ödev
+    //-65.754168 'den küçük boylamda yer alan ve 70'den fazla score alan 'Amerikan' mutfağı hazırlamayan restoranları bulmak için bir MongoDB sorgusu yazın.
+    
+     db.foods.find(
+      {
+       "cuisine" : {$ne : "American "},
+       "grades.score" :{$gt: 70},
+       "address.coord" : {$lt : -65.754168}
+         } );
+                   
+  //ödev
+//Herhangi bir 'Amerikan' mutfağı hazırlamayan ve Brooklyn borough a ait olmayan, 'A' score alan restoranları bulmak için bir MongoDB sorgusu yazın. Belge, mutfağa göre azalan sırada görüntülenmelidir. 
+
+db.foods.find( {
+   "cuisine" : {$ne : "American "},
+   "grades.grade" :"A",
+   "borough": {$ne : "Brooklyn"} } ).sort({"cuisine":-1});
+
+
+
+
+
+//ödev
+//Adının son üç harfi 'ces' olan restoranlar için restoran kimliği, adı, ilçesi ve mutfağını bulmak için bir MongoDB sorgusu yazın
+use("ÜLKELER")
+
+db.foods.find(
+{name: /ces$/},
+{
+"restaurant_id" : 1,
+"name":1,"borough":1,
+"cuisine" :1
+}
+);
+
+
+
+
+//ödev
+//Bronx borough a ait , Amerikan veya Çin yemeği hazırlayan restoranları bulmak için bir MongoDB sorgusu yazınız
+db.foods.find(
+{ 
+"borough": "Bronx" , 
+$or : [
+{ "cuisine" : "American " },
+{ "cuisine" : "Chinese" }
+] 
+} 
+);
+
+
+
+//ödev
+//Puanı 10'dan fazla olmayan restoranların restoran id si, adı, ilçesi ve mutfağını bulmak için bir MongoDB sorgusu yazın.
+db.foods.find(
+{"grades.score" : 
+{ $not: 
+{$gt : 10}
+}
+},
+{
+"restaurant_id" : 1,
+"name":1,"borough":1,
+"cuisine" :1
+}
+);
+
+
+
+
+  
+   
+//9******) grades dizisinin  herhangi bir öğesinin, (grade) bir "A" notu içerdiği ve bir ISODate "2014-08-11T00:00:00Z" tarihinde 9 score aldığı restoranlar için restoran id sini, adını ve grades in sadece belirtilen elemanını  bulmak için bir MongoDB sorgusu yazın
+
+use("ÜLKELER")
+db.foods.find( 
+                      { "grades":{ "date": ISODate("2014-08-11T00:00:00Z"),
+                                             "grade": "A", 
+                                             "score": 9 } }, 
+                       {"restaurant_id" : 1,"name":1,"grades.$":1 }  );
+                  
+ //ödev
+//Koordinat (coord[]) dizisinin 2. elemanı 42'den fazla ve 52'ye kadar bir değer içeren restoranların restoran id, adı, adresi ve coğrafi konumunu (coords) bulmak için bir MongoDB sorgusu yazın.
+use("ÜLKELER")
+db.foods.find( 
+                      { 
+                        "address.coord.1": {$gt : 42, $lte : 52}
+                      },
+                        {"restaurant_id" : 1,"name":1,"address":1,"coord":1}
+                   );
+
+//ödev
+//Mutfağın adını artan sırada düzenlemek için bir MongoDB sorgusu yazın ve aynı mutfak için ilçe azalan sırada olmalıdır.
+db.foods.find().sort(
+                           {"cuisine":1,"borough" : -1,}
+                          );
